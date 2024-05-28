@@ -1,0 +1,50 @@
+import React, { useState, useEffect } from 'react';
+
+const DonationHistory = () => {
+  // State to store donation history
+  const [donationHistory, setDonationHistory] = useState([]);
+
+  // Fetch donation history from API
+  useEffect(() => {
+    // Fetch donation history from API endpoint
+    fetch('/api/donation-history')
+      .then(response => response.json())
+      .then(data => {
+        // Once data is fetched, update state
+        setDonationHistory(data);
+      })
+      .catch(error => {
+        console.error('Error fetching donation history:', error);
+      });
+  }, []); // Empty dependency array ensures this effect runs only once on component mount
+
+  return (
+    <div>
+      <h2>Donation History</h2>
+      {donationHistory.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Recipient</th>
+              <th>Food Donated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {donationHistory.map((donation, index) => (
+              <tr key={index}>
+                <td>{donation.date}</td>
+                <td>{donation.recipient}</td>
+                <td>{donation.foodDonated}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No donation history available.</p>
+      )}
+    </div>
+  );
+};
+
+export default DonationHistory;
